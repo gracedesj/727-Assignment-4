@@ -45,7 +45,7 @@ We can look at the available tables in this database using `dbListTables`.
 
 **Note**: When you run this code, you will be sent to a browser and have to give Google permissions to Tidyverse API Packages. **Make sure you select all to give access or else your code will not run.**
 
-```{r}
+```{r, message = FALSE}
 dbListTables(con)
 ```
 
@@ -149,7 +149,7 @@ query3 <-
   crime_tibble %>%
   filter(district == 11, arrest == TRUE) %>%
   group_by(primary_type, year) %>%
-  summarise(arrest_count = n()) %>%
+  summarise(arrest_count = n(), .groups = 'drop') %>%
   arrange(year)
 
 print(query3)
@@ -168,6 +168,10 @@ query3_R_object <-
 ```
 
 Confirm that you pulled the data to the local environment by displaying the first ten rows of the saved data set.
+
+```{r}
+str(query3_R_object)
+```
 
 ```{r}
 head(query3_R_object, 10)
