@@ -24,7 +24,7 @@ Go to <https://console.cloud.google.com> and make sure you are logged in a non-u
 After you have initialized a project, paste your project ID into the following chunk.
 
 ```{r}
-project <- "surv-727-test-439518"
+project <- "assignment-4-440616"
 ```
 
 We will connect to a public database, the Chicago crime database, which has data on crime in Chicago.
@@ -62,13 +62,51 @@ LIMIT 10;
 
 Next, count the number of arrests grouped by `primary_type` in 2016. Note that is a somewhat similar task as above, with some adjustments on which rows should be considered. Sort the results, i.e. list the number of arrests in a descending order.
 
+```{sql connection = con}
+SELECT primary_type, COUNT(*) AS arrest_count
+FROM crime
+WHERE year = 2016 AND arrest = TRUE
+GROUP BY primary_type
+ORDER BY arrest_count DESC;
+```
+
 We can also use the `date` for grouping. Count the number of arrests grouped by hour of the day in 2016. You can extract the latter information from `date` via `EXTRACT(HOUR FROM date)`. Which time of the day is associated with the most arrests?
+
+```{sql connection = con}
+SELECT EXTRACT(HOUR FROM date) AS hour_of_day, COUNT(*) AS arrest_count
+FROM crime
+WHERE year = 2016 AND arrest = TRUE
+GROUP BY hour_of_day
+ORDER BY arrest_count DESC;
+```
+
+The time of day that is associated with the most arrests is 19:00/7:00pm.
 
 Focus only on `HOMICIDE` and count the number of arrests for this incident type, grouped by year. List the results in descending order.
 
+```{sql connection = con}
+SELECT year, COUNT(*) AS homicide_arrest_count
+FROM crime
+WHERE primary_type = 'HOMICIDE' AND arrest = TRUE
+GROUP BY year
+ORDER BY homicide_arrest_count DESC;
+```
+
 Find out which districts have the highest numbers of arrests in 2015 and 2016. That is, count the number of arrests in 2015 and 2016, grouped by year and district. List the results in descending order.
 
+```{sql connection = con}
+SELECT year, district, COUNT(*) AS arrest_count
+FROM crime
+WHERE (year = 2015 OR year = 2016) AND arrest = TRUE
+GROUP BY year, district
+ORDER BY arrest_count DESC;
+```
+
 Lets switch to writing queries from within R via the `DBI` package. Create a query object that counts the number of arrests grouped by `primary_type` of district 11 in year 2016. The results should be displayed in descending order.
+
+```{r}
+
+```
 
 Execute the query.
 
